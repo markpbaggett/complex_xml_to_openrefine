@@ -1,5 +1,3 @@
-import json
-
 class Record:
     def __init__(self, full_record):
         self.record = full_record
@@ -34,7 +32,6 @@ class Record:
                         print(thing)
                         # this needs to be implemented i think
                     i += 1
-        #return json.dumps(self.payload)
         return self.payload
 
 
