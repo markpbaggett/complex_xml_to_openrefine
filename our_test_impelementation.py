@@ -3,11 +3,11 @@ import json
 from record import Record
 import argparse
 
-argument_parser = argparse.ArgumentParser(description='')
+argument_parser = argparse.ArgumentParser(description='Use the following to create flat JSON from Complex XML.')
 argument_parser.add_argument("-f", "--file", dest="filename",
-                             help="Specify path to file to read.", required=False)
+                             help="Specify path to file to read. Defaults to sample_data/text.xml.", required=False)
 argument_parser.add_argument("-x", "--export", dest="export_filename",
-                             help="Specify exported JSON filename.")
+                             help="Specify exported JSON filename. Defaults to export.json.")
 argument_parser.add_argument("-r", "--root", dest="root_node",
                              help="Specify path to the record root of your collection. Defaults to modsCollection/mods")
 arguments = argument_parser.parse_args()
@@ -44,7 +44,6 @@ if __name__ == "__main__":
     for x in full_path:
         real_json_call = real_json_call[x]
     our_list_of_records = real_json_call
-    #our_list_of_records = real_json['modsCollection']['mods']
     results = []
     i = 1
     for each_record in our_list_of_records:
