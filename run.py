@@ -2,6 +2,7 @@ import xmltodict
 import json
 from record import Record
 import argparse
+import collections
 
 argument_parser = argparse.ArgumentParser(description='Use the following to create flat JSON from Complex XML.')
 argument_parser.add_argument("-f", "--file", dest="filename",
@@ -48,13 +49,13 @@ if __name__ == "__main__":
     i = 1
     for each_record in our_list_of_records:
         current_record = Record(each_record)
-        record_split = current_record.split()
+        record_split = current_record.ordered_split()
         json_string = json.dumps(record_split)
-        jsonized_record_split = json.loads(json_string)
+        jsonized_record_split = collections.OrderedDict(json.loads(json_string))
         results.append(jsonized_record_split)
         i += 1
     output = open(export_file, 'w')
     new_our_data = json.dumps(results)
     output.write(new_our_data)
     output.close()
-    print("\n\tAdded {} records from {} to {}\n".format(str(i), filename, export_file))
+    print("\n\tAdded {} records from {} to {}".format(str(i), filename, export_file))
