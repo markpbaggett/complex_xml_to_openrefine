@@ -57,3 +57,4 @@ if __name__ == "__main__":
     new_our_data = json.dumps(results)
     output.write(new_our_data)
     output.close()
+    print("\n\tAdded {} records from {} to {}\n".format(str(i), filename, export_file))
