@@ -2,7 +2,7 @@ import xmltodict
 import json
 from record import Record
 
-file = open("test.xml", 'r')
+file = open("sample_data/test.xml", 'r')
 read = file.read()
 json_string = json.dumps(xmltodict.parse(read))
 real_json = json.loads(json_string)
