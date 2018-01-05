@@ -1,7 +1,9 @@
+import json
+
 class Record:
     def __init__(self, full_record):
         self.record = full_record
-        self.payload = []
+        self.payload = {}
 
     def __str__(self):
         return "{}".format(self.record)
@@ -9,29 +11,30 @@ class Record:
     def split(self):
         for k, v in self.record.items():
             if type(v) is str:
-                self.payload.append({k : v})
+                self.payload.update({k : v})
             elif type(v) is dict:
                 dictionary_to_decipher = RecordChunk(v, k)
                 x = dictionary_to_decipher.split()
                 if x is not None:
                     for item in x:
-                        self.payload.append(item)
+                        self.payload.update(item)
             elif type(v) is list:
                 i = 0
                 for thing in v:
                     key = "{}.{}".format(k, i)
                     if type(thing) is str:
-                        self.payload.append({key: thing})
+                        self.payload.update({key: thing})
                     elif type(thing) is dict:
                         dictionary_to_decipher = RecordChunk(thing, key)
                         x = dictionary_to_decipher.split()
                         if x is not None:
                             for item in x:
-                                self.payload.append(item)
+                                self.payload.update(item)
                     elif type(thing) is list:
                         print(thing)
                         # this needs to be implemented i think
                     i += 1
+        #return json.dumps(self.payload)
         return self.payload
 
 
