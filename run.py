@@ -1,6 +1,6 @@
 import xmltodict
 import json
-from record import Record
+from record import Record, RecordCollection
 import argparse
 import collections
 
@@ -27,12 +27,12 @@ if arguments.root_node:
 else:
     root_node = "/modsCollection/mods"
 
+
 def convert_root_node(node):
     if node.startswith("/"):
-        node = node.replace('/','',1)
+        node = node.replace('/', '', 1)
     path = node.split('/')
     return path
-
 
 
 if __name__ == "__main__":
@@ -45,17 +45,14 @@ if __name__ == "__main__":
     for x in full_path:
         real_json_call = real_json_call[x]
     our_list_of_records = real_json_call
-    results = []
-    i = 1
+    results = RecordCollection()
     for each_record in our_list_of_records:
         current_record = Record(each_record)
         record_split = current_record.ordered_split()
         json_string = json.dumps(record_split)
         jsonized_record_split = collections.OrderedDict(json.loads(json_string))
-        results.append(jsonized_record_split)
-        i += 1
+        results.add_record(jsonized_record_split)
     output = open(export_file, 'w')
-    new_our_data = json.dumps(results)
-    output.write(new_our_data)
+    output.write(results.jsonize())
     output.close()
-    print("\n\tAdded {} records from {} to {}".format(str(i), filename, export_file))
+    print("\n\tAdded {} records from {} to {}".format(str(results.total_records), filename, export_file))

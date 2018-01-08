@@ -1,4 +1,6 @@
 import collections
+import json
+
 
 class Record:
     def __init__(self, full_record):
@@ -12,7 +14,7 @@ class Record:
     def split(self):
         for k, v in self.record.items():
             if type(v) is str:
-                self.payload.update({k : v})
+                self.payload.update({k: v})
             elif type(v) is dict:
                 dictionary_to_decipher = RecordChunk(v, k)
                 x = dictionary_to_decipher.split()
@@ -40,7 +42,7 @@ class Record:
     def ordered_split(self):
         for k, v in self.record.items():
             if type(v) is str:
-                self.ordered_payload.update({k : v})
+                self.ordered_payload.update({k: v})
             elif type(v) is dict:
                 dictionary_to_decipher = RecordChunk(v, k)
                 x = dictionary_to_decipher.split()
@@ -65,6 +67,9 @@ class Record:
                     i += 1
         return self.ordered_payload
 
+    def jsonize(self):
+        json_string = json.dumps(self.ordered_payload)
+        return collections.OrderedDict(json.loads(json_string))
 
 
 class RecordChunk:
@@ -92,7 +97,7 @@ class RecordChunk:
             elif type(v) is list:
                 i = 0
                 for thing in v:
-                    key = "{}.{}.{}".format(self.path,k, i)
+                    key = "{}.{}.{}".format(self.path, k, i)
                     if type(thing) is str:
                         self.payload.append({key: thing})
                     elif type(thing) is dict:
@@ -108,3 +113,17 @@ class RecordChunk:
         return self.payload
 
 
+class RecordCollection:
+    def __init__(self, number_of_records=0):
+        self.total_records = number_of_records
+        self.results = []
+
+    def __str__(self):
+        return "This record set includes {} records.".format(self.total_records)
+
+    def add_record(self, new_record):
+        self.total_records += 1
+        self.results.append(new_record)
+
+    def jsonize(self):
+        return json.dumps(self.results)
