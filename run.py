@@ -48,10 +48,8 @@ if __name__ == "__main__":
     results = RecordCollection()
     for each_record in our_list_of_records:
         current_record = Record(each_record)
-        record_split = current_record.ordered_split()
-        json_string = json.dumps(record_split)
-        jsonized_record_split = collections.OrderedDict(json.loads(json_string))
-        results.add_record(jsonized_record_split)
+        current_record.ordered_split()
+        results.add_record(current_record.jsonize())
     output = open(export_file, 'w')
     output.write(results.jsonize())
     output.close()
