@@ -1,5 +1,6 @@
 import collections
 import json
+from lxml import etree
 
 
 class Record:
@@ -114,9 +115,12 @@ class RecordChunk:
 
 
 class RecordCollection:
-    def __init__(self, number_of_records=0):
+    def __init__(self, name, export_format="json", number_of_records=0):
         self.total_records = number_of_records
         self.results = []
+        self.output_name = name
+        self.output_type = "xml"
+        self.export_format = export_format
 
     def __str__(self):
         return "This record set includes {} records.".format(self.total_records)
@@ -126,4 +130,32 @@ class RecordCollection:
         self.results.append(new_record)
 
     def jsonize(self):
-        return json.dumps(self.results)
+        file = open(self.output_name, 'w')
+        file.write(json.dumps(self.results))
+        file.close()
+
+    def convert_to_xml(self):
+        record = etree.Element('openrefine')
+        document = etree.ElementTree(record)
+        for x in self.results:
+            new_record = etree.SubElement(record, 'record')
+            for k, v in x.items():
+                key = escape_keys(k)
+                new_element = etree.SubElement(new_record, key)
+                new_element.text = v
+        file = open(self.output_name, 'wb')
+        document.write(file)
+        file.close()
+
+    def determine_export_format(self):
+        if self.export_format == "xml":
+            self.convert_to_xml()
+        else:
+            self.jsonize()
+
+
+def escape_keys(key):
+    key = key.replace('@', "_AT_")
+    key = key.replace('#', "_HASH_")
+    key = key.replace(':', "_COLON_")
+    return key
