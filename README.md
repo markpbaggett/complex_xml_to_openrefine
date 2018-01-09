@@ -20,6 +20,7 @@ python run.py -f my_xml_file.xml -x my_exported_json.xml -r /path/to/individual/
 * Choose your file with -f or --file. Defaults to "sample_data/test.xml."
 * Choose your exported json file with -x or --export. Defaults to "export.json."
 * Specify the path to your record in XML input.  Defaults to "/modsCollection/mods."
+* Specify the export format with -xf or --export_format. Defaults to "json."
 
 ## Importing to OpenRefine
 
@@ -29,6 +30,7 @@ python run.py -f my_xml_file.xml -x my_exported_json.xml -r /path/to/individual/
 3. Your OpenRefine project should look like the figure below with column names that are easily associated.
     * ![Your imported OpenRefineProject](images/created_project.png)
 
-#### Current Issues
+## Export Formats
 
-1. Right now, the finalized JSON is not ordered.  Therefore, you have to order your columns after project creation. This will be addressed soon! 
+Currently, results can be exported to "XML" or "JSON" (JSON is the default).  While the JSON file is created in
+document order, OpenRefine does not respect it.  Therefore, if you want your file to be ordered, specify XML.
