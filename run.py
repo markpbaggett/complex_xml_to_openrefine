@@ -11,8 +11,10 @@ argument_parser.add_argument("-x", "--export", dest="export_filename",
 argument_parser.add_argument("-r", "--root", dest="root_node",
                              help="Specify path to the record root of your collection. Defaults to modsCollection/mods")
 argument_parser.add_argument("-xf", "--export_format", dest="export_format", help="Specify the export format."
-                                                                                  "Choose xml or json."
-                                                                                  "Defaults to JSON.")
+                                                                                  "Choose xml, csv, or json."
+                                                                                  "Defaults to json.")
+argument_parser.add_argument("-d", "--delimiter", dest="csv_delimiter", help="Use to specify a delimiter if exporting"
+                                                                             "to csv.  Default is |.")
 arguments = argument_parser.parse_args()
 
 # Default variables
@@ -28,10 +30,14 @@ if arguments.root_node:
     root_node = arguments.root_node
 else:
     root_node = "/modsCollection/mods"
-if arguments.export_format == "xml":
-    export_format = "xml"
+if arguments.export_format:
+    export_format = arguments.export_format
 else:
     export_format = "json"
+if arguments.csv_delimiter:
+    csv_delimiter = arguments.csv_delimiter
+else:
+    csv_delimiter = "|"
 
 
 def convert_root_node(node):
@@ -56,5 +62,5 @@ if __name__ == "__main__":
         current_record = Record(each_record)
         current_record.ordered_split()
         results.add_record(current_record.jsonize())
-    results.determine_export_format()
+    results.determine_export_format(csv_delimiter)
     print("\n\tAdded {} records from {} to {}".format(str(results.total_records), filename, export_file))

@@ -1,6 +1,7 @@
 import collections
 import json
 from lxml import etree
+import csv
 
 
 class Record:
@@ -147,11 +148,42 @@ class RecordCollection:
         document.write(file)
         file.close()
 
-    def determine_export_format(self):
+    def determine_export_format(self, delimiter="|"):
         if self.export_format == "xml":
             self.convert_to_xml()
+        elif self.export_format == 'csv':
+            self.create_csv(delimiter)
         else:
             self.jsonize()
+
+    def create_csv(self, delimiter):
+        to_csv = self.results
+        keys = []
+        for x in to_csv:
+            for k, v in x.items():
+                if k not in keys:
+                    keys.append(k)
+        keys = sorted(keys)
+        with open(self.output_name, 'w') as output_file:
+            dict_writer = csv.writer(output_file, delimiter=delimiter)
+            dict_writer.writerow(keys)
+            i = 0
+            for x in to_csv:
+                x = dict(x)
+                keys_in_x = []
+                for k, v in x.items():
+                    keys_in_x.append(k)
+                new_dict = {}
+                for y in keys:
+                    if y not in keys_in_x:
+                        new_dict[y] = ""
+                    else:
+                        new_dict[y] = x[y]
+                my_row = []
+                for k, v in new_dict.items():
+                    my_row.append(v)
+                dict_writer.writerow(my_row)
+                i += 1
 
 
 def escape_keys(key):
