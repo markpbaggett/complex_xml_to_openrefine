@@ -2,6 +2,8 @@ import collections
 import json
 from lxml import etree
 import csv
+import os
+import xmltodict
 
 
 class Record:
@@ -176,14 +178,43 @@ class RecordCollection:
                 new_dict = {}
                 for y in keys:
                     if y not in keys_in_x:
-                        new_dict[y] = ""
+                        new_dict[y] = "    "
                     else:
                         new_dict[y] = x[y]
                 my_row = []
                 for k, v in new_dict.items():
+                    v = v.replace("\n", " ")
                     my_row.append(v)
                 dict_writer.writerow(my_row)
                 i += 1
+
+
+class Batch:
+    def __init__(self, directory):
+        self.path_to_files = directory
+        self.total_number_of_records = 0
+        self.records = []
+
+    def build(self):
+        for x in os.walk(self.path_to_files):
+            x = list(x)
+            for y in x:
+                current_path = ""
+                if type(y) is str:
+                    current_path = y
+                if type(y) is list and len(y) > 0:
+                    for potential_record in y:
+                        if potential_record.endswith(".xml"):
+                            path_to_potential_record = "{}/{}".format(current_path, potential_record)
+                            self.add_record(path_to_potential_record)
+
+    def add_record(self, record):
+        with open(record, 'r') as file:
+            read = file.read()
+            clean = remove_bad_stuff(read)
+            json_string = json.dumps(xmltodict.parse(clean))
+            real_json = json.loads(json_string)
+            self.records.append(real_json)
 
 
 def escape_keys(key):
@@ -191,3 +222,11 @@ def escape_keys(key):
     key = key.replace('#', "_HASH_")
     key = key.replace(':', "_COLON_")
     return key
+
+
+def remove_bad_stuff(some_bytes):
+    good_string = some_bytes.replace(u'\u000B', u'')
+    good_string = good_string.replace(u'\u000C', u'')
+    good_bytes = good_string.encode("utf-8")
+    return good_bytes
+

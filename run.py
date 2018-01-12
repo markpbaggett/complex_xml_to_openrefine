@@ -1,6 +1,6 @@
 import xmltodict
 import json
-from record import Record, RecordCollection
+from record import Record, RecordCollection, Batch
 import argparse
 
 argument_parser = argparse.ArgumentParser(description='Use the following to create flat JSON from Complex XML.')
@@ -15,6 +15,10 @@ argument_parser.add_argument("-xf", "--export_format", dest="export_format", hel
                                                                                   "Defaults to json.")
 argument_parser.add_argument("-d", "--delimiter", dest="csv_delimiter", help="Use to specify a delimiter if exporting"
                                                                              "to csv.  Default is |.")
+argument_parser.add_argument("-i", "--ingest_type", dest="ingest_type", help="Specify batch of file. File is default.")
+argument_parser.add_argument("-id", "--ingest_directory", dest="ingest_directory", help="If ingest_type is batch,"
+                                                                                        "specify path to "
+                                                                                        "ingest_directory.")
 arguments = argument_parser.parse_args()
 
 # Default variables
@@ -38,6 +42,14 @@ if arguments.csv_delimiter:
     csv_delimiter = arguments.csv_delimiter
 else:
     csv_delimiter = "|"
+if arguments.ingest_type == "batch":
+    populate = "batch"
+else:
+    populate = "single file"
+if arguments.ingest_directory:
+    path_to_files = arguments.ingest_directory
+else:
+    path_to_files = ""
 
 
 def convert_root_node(node):
@@ -48,15 +60,20 @@ def convert_root_node(node):
 
 
 if __name__ == "__main__":
-    file = open(filename, 'r')
-    read = file.read()
-    json_string = json.dumps(xmltodict.parse(read))
-    real_json = json.loads(json_string)
-    full_path = convert_root_node(root_node)
-    real_json_call = real_json
-    for x in full_path:
-        real_json_call = real_json_call[x]
-    our_list_of_records = real_json_call
+    if populate != "batch":
+        file = open(filename, 'r')
+        read = file.read()
+        json_string = json.dumps(xmltodict.parse(read))
+        real_json = json.loads(json_string)
+        full_path = convert_root_node(root_node)
+        real_json_call = real_json
+        for x in full_path:
+            real_json_call = real_json_call[x]
+        our_list_of_records = real_json_call
+    else:
+        records = Batch(path_to_files)
+        records.build()
+        our_list_of_records = records.records
     results = RecordCollection(export_file, export_format)
     for each_record in our_list_of_records:
         current_record = Record(each_record)
