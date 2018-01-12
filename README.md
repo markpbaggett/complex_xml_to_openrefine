@@ -41,7 +41,7 @@ python run.py -i batch -id /path/to/files -x example.csv -xf csv -d |
 | -id | --ingest_directory  | Specify the path to your XML files to batch import. |  |
 | -x | --export  | Specify the file name to save your data in. | export.json  |
 | -xf | --export_format | Specify the format of your exported file: json, xml, or csv. **NOTE**: use csv for ordered import. | json |
-| -d | --delimiter | If exporting to csv, specify a delimiter | &#124
+| -d | --delimiter | If exporting to csv, specify a delimiter | &#124 |
 
 ## Importing to OpenRefine
 
