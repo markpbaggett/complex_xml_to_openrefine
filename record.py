@@ -198,8 +198,8 @@ class Batch:
     def build(self):
         for x in os.walk(self.path_to_files):
             x = list(x)
+            current_path = ""
             for y in x:
-                current_path = ""
                 if type(y) is str:
                     current_path = y
                 if type(y) is list and len(y) > 0:
@@ -229,4 +229,3 @@ def remove_bad_stuff(some_bytes):
     good_string = good_string.replace(u'\u000C', u'')
     good_bytes = good_string.encode("utf-8")
     return good_bytes
-
