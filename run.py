@@ -56,6 +56,11 @@ def convert_root_node(node):
     if node.startswith("/"):
         node = node.replace('/', '', 1)
     path = node.split('/')
+    i = 0
+    for item in path:
+        if item == "":
+            path.pop(i)
+        i += 1
     return path
 
 
