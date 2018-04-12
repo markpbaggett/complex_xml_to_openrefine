@@ -215,6 +215,7 @@ class Batch:
             json_string = json.dumps(xmltodict.parse(clean))
             real_json = json.loads(json_string)
             self.records.append(real_json)
+            self.total_number_of_records += 1
 
 
 def escape_keys(key):
@@ -229,3 +230,4 @@ def remove_bad_stuff(some_bytes):
     good_string = good_string.replace(u'\u000C', u'')
     good_bytes = good_string.encode("utf-8")
     return good_bytes
+
