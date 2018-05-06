@@ -66,6 +66,7 @@ def convert_root_node(node):
 
 if __name__ == "__main__":
     if populate != "batch":
+        my_source = filename
         file = open(filename, 'r')
         read = file.read()
         json_string = json.dumps(xmltodict.parse(read))
@@ -76,6 +77,7 @@ if __name__ == "__main__":
             real_json_call = real_json_call[x]
         our_list_of_records = real_json_call
     else:
+        my_source = path_to_files
         records = Batch(path_to_files)
         records.build()
         our_list_of_records = records.records
@@ -85,4 +87,4 @@ if __name__ == "__main__":
         current_record.ordered_split()
         results.add_record(current_record.jsonize())
     results.determine_export_format(csv_delimiter)
-    print("\n\tAdded {} records from {} to {}".format(str(results.total_records), filename, export_file))
+    print("\n\tAdded {} records from {} to {}".format(str(results.total_records), my_source, export_file))
