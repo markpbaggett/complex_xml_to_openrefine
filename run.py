@@ -75,7 +75,7 @@ if __name__ == "__main__":
         real_json_call = real_json
         for x in full_path:
             real_json_call = real_json_call[x]
-        our_list_of_records = real_json_call
+        our_list_of_records = [real_json_call]
     else:
         my_source = path_to_files
         records = Batch(path_to_files)
