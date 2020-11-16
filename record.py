@@ -220,8 +220,8 @@ class Batch:
                 real_json["filename"] = filename
                 self.records.append(real_json)
                 self.total_number_of_records += 1
-            except ExpatError:
-                print(record)
+            except ExpatError as e:
+                print(f"{record}: {e}")
 
 
 def escape_keys(key):
