@@ -195,6 +195,7 @@ class Batch:
         self.path_to_files = directory
         self.total_number_of_records = 0
         self.records = []
+        self.errors = []
 
     def build(self):
         for x in os.walk(self.path_to_files):
@@ -221,7 +222,8 @@ class Batch:
                 self.records.append(real_json)
                 self.total_number_of_records += 1
             except ExpatError as e:
-                print(f"{record}: {e}")
+                self.errors.append(f"{record}: {e}")
+        return
 
 
 def escape_keys(key):

@@ -88,3 +88,8 @@ if __name__ == "__main__":
         results.add_record(current_record.jsonize())
     results.determine_export_format(csv_delimiter)
     print("\n\tAdded {} records from {} to {}".format(str(results.total_records), my_source, export_file))
+    if len(records.errors) > 0:
+        print(f"\n\n\tWARNING: {len(records.errors)} occurred:\n")
+        for error in records.errors:
+            print(f"\t{error}")
+
