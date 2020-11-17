@@ -223,6 +223,8 @@ class Batch:
                 self.total_number_of_records += 1
             except ExpatError as e:
                 self.errors.append(f"{record}: {e}")
+            except UnicodeDecodeError as e:
+                self.errors.append(f"{record}: {e}")
         return
 
 
